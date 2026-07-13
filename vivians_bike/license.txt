@@ -1,0 +1,11 @@
+Model Information:
+* title:	Vivian's Bike
+* source:	https://sketchfab.com/3d-models/vivians-bike-9c7c9fd320844828a597320a71c31f81
+* author:	Mace (https://sketchfab.com/Mace121)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Vivian's Bike" (https://sketchfab.com/3d-models/vivians-bike-9c7c9fd320844828a597320a71c31f81) by Mace (https://sketchfab.com/Mace121) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
