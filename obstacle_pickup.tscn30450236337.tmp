@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvl1h18pyeaem"]
+
+[ext_resource type="Script" uid="uid://bxbrv1q8tqj7g" path="res://obstacle_car.gd" id="1_b7vpu"]
+[ext_resource type="PackedScene" uid="uid://dqqidcl2ldh8m" path="res://KayKit_City_Builder_Bits_1.0_FREE/Assets/fbx/car_hatchback.fbx" id="1_eljin"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w8byt"]
+size = Vector3(0.36853, 0.370972, 1)
+
+[node name="ObstacleSedan" type="Area3D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_b7vpu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.152, 0)
+shape = SubResource("BoxShape3D_w8byt")
+
+[node name="car_hatchback" parent="." instance=ExtResource("1_eljin")]

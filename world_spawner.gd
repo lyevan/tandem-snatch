@@ -43,3 +43,9 @@ func spawn_module(z_pos: float) -> void:
 	var instance = road_scene.instantiate()
 	add_child(instance)
 	instance.position.z = z_pos
+	
+	# --- ADDED THIS LINE ---
+	# Tell the newly created road chunk exactly where it is in the world, 
+	# so it can drop its decoupled cars at that exact Z position!
+	if instance.has_method("generate_4lane_traffic"):
+		instance.call("generate_4lane_traffic", z_pos)

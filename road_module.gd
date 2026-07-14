@@ -1,35 +1,89 @@
 extends Node3D
 
-# Export an array so we can drag-and-drop all 6 buildings into the Inspector!
 @export var building_scenes: Array[PackedScene]
+@export var obstacle_scenes: Array[PackedScene]
+
+@export var max_cars_per_tile: int = 2
+@export var spawn_chance_per_attempt: float = 0.6
 
 @onready var left_slot: Marker3D = $LeftSlot
 @onready var right_slot: Marker3D = $RightSlot
 
+# We still use these to know the exact X-axis (left/right track coordinates)
+@onready var lane_far_left: Marker3D = $LaneFarLeft
+@onready var lane_mid_left: Marker3D = $LaneMidLeft
+@onready var lane_mid_right: Marker3D = $LaneMidRight
+@onready var lane_far_right: Marker3D = $LaneFarRight
+
+var incoming_lanes: Array[Marker3D]
+var outgoing_lanes: Array[Marker3D]
+
 func _ready() -> void:
-	# If no buildings are assigned in the editor, exit safely to prevent crashes
-	if building_scenes.is_empty():
+	incoming_lanes = [lane_far_left, lane_mid_left]
+	outgoing_lanes = [lane_mid_right, lane_far_right]
+	
+	if not building_scenes.is_empty():
+		spawn_building_at_slot(left_slot, 90.0)
+		spawn_building_at_slot(right_slot, -90.0)
+
+# --- CRITICAL FIX: We pass the target z_position from the world spawner! ---
+func generate_4lane_traffic(horizon_z: float) -> void:
+	if obstacle_scenes.is_empty():
 		return
 		
-	# Spawn a random building on the left sidewalk, rotated 90 degrees
-	spawn_building_at_slot(left_slot, 90.0)
+	var spawn_attempts = randi_range(1, max_cars_per_tile)
+	var available_incoming = incoming_lanes.duplicate()
+	var available_outgoing = outgoing_lanes.duplicate()
 	
-	# Spawn a random building on the right sidewalk, rotated -90 degrees (or 270)
-	spawn_building_at_slot(right_slot, -90.0)
+	for i in range(spawn_attempts):
+		if randf() > spawn_chance_per_attempt:
+			continue
+			
+		var spawn_incoming: bool = randf() > 0.5
+		
+		if spawn_incoming and available_incoming.size() <= 1:
+			spawn_incoming = false
+		elif not spawn_incoming and available_outgoing.size() <= 1:
+			spawn_incoming = true
+			
+		if available_incoming.size() <= 1 and available_outgoing.size() <= 1:
+			break
+			
+		var target_lane: Marker3D
+		if spawn_incoming:
+			target_lane = available_incoming.pick_random()
+			available_incoming.erase(target_lane)
+		else:
+			target_lane = available_outgoing.pick_random()
+			available_outgoing.erase(target_lane)
+			
+		var random_car_variant: PackedScene = obstacle_scenes.pick_random()
+		var car_instance = random_car_variant.instantiate()
+		
+		# Attach to main scene root so it doesn't delete with the tile
+		get_tree().current_scene.add_child(car_instance)
+		
+		# --- THE FIXED POSITION MATH ---
+		# X: Take the clean lateral coordinate of the marker lane
+		# Y: Keep it grounded on the asphalt floor
+		# Z: Explicitly force it to spawn at the true horizon coordinate passed from the spawner
+		var spawn_x = target_lane.global_position.x
+		var random_z_stagger = randf_range(-1.2, 1.2)
+		
+		car_instance.global_position = Vector3(spawn_x, 0.1, horizon_z + random_z_stagger)
+		
+		if spawn_incoming:
+			car_instance.rotation_degrees.y = 0.0
+			if car_instance.has_method("set_incoming"):
+				car_instance.call("set_incoming", true)
+		else:
+			car_instance.rotation_degrees.y = 180.0
+			if car_instance.has_method("set_incoming"):
+				car_instance.call("set_incoming", false)
 
-# Added a second parameter 'y_rotation_deg' to handle custom Y-axis rotation
 func spawn_building_at_slot(slot: Marker3D, y_rotation_deg: float) -> void:
-	# 1. Pick a random building from our array (Building A through F)
 	var random_scene: PackedScene = building_scenes.pick_random()
-	
-	# 2. Instantiate it
 	var building_instance := random_scene.instantiate()
-	
-	# 3. Add it as a child of the slot so it inherits its position
 	slot.add_child(building_instance)
-	
-	# 4. Zero out local position so it sits squarely on the slot marker
 	building_instance.position = Vector3.ZERO
-	
-	# 5. Reset X and Z tilt, but apply our custom Y rotation in degrees!
 	building_instance.rotation_degrees = Vector3(0.0, y_rotation_deg, 0.0)
