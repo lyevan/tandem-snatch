@@ -78,6 +78,17 @@ func _ready() -> void:
 		hud.update_loot(0, 0)
 		hud.update_heat(0.0, max_heat)
 		hud.update_gas_shop(gas_refill_price, 0.0, gas_purchase_cooldown)
+		
+	# Dynamically instantiate PauseMenu overlay
+	var pause_menu_scene = load("res://scenes/ui/pause_menu.tscn")
+	if pause_menu_scene:
+		var pause_menu_instance = pause_menu_scene.instantiate()
+		get_tree().current_scene.add_child.call_deferred(pause_menu_instance)
+		
+	# Play gameplay BGM (engine sound loop)
+	var audio_mgr = get_node_or_null("/root/AudioManager")
+	if audio_mgr:
+		audio_mgr.play_bgm("game")
 
 func _physics_process(delta: float) -> void:
 	# 1. RESET & NITRO INPUT LISTENERS
@@ -250,6 +261,10 @@ func take_crash_penalty() -> void:
 	
 	apply_screen_shake(0.5) 
 	
+	var audio_mgr = get_node_or_null("/root/AudioManager")
+	if audio_mgr:
+		audio_mgr.play_sfx("crash")
+	
 	if current_fuel <= 0.0:
 		trigger_busted_sequence()
 		if hud:
@@ -310,6 +325,10 @@ func evaluate_snatch_attempt() -> void:
 			hud.update_loot(cash, 500)
 			hud.update_heat(heat, max_heat)
 			hud.show_qte_feedback("⚡ PERFECT SNATCH! +₱500 ⚡", Color.GOLD, 1.5)
+		var audio_mgr = get_node_or_null("/root/AudioManager")
+		if audio_mgr:
+			audio_mgr.play_sfx("snatch")
+			audio_mgr.play_sfx("cash")
 			
 	# --- TIER 2: GOOD SNATCH (0.05s to 0.15s) ---
 	elif qte_timer <= good_threshold:
@@ -319,6 +338,10 @@ func evaluate_snatch_attempt() -> void:
 			hud.update_loot(cash, 250)
 			hud.update_heat(heat, max_heat)
 			hud.show_qte_feedback("💰 GOOD SNATCH! +₱250 💰", Color.SPRING_GREEN, 1.5)
+		var audio_mgr = get_node_or_null("/root/AudioManager")
+		if audio_mgr:
+			audio_mgr.play_sfx("snatch")
+			audio_mgr.play_sfx("cash")
 			
 	# --- TIER 3: SLOPPY / LATE SNATCH (> 0.15s) ---
 	else:
@@ -328,6 +351,10 @@ func evaluate_snatch_attempt() -> void:
 			hud.update_loot(cash, 100)
 			hud.update_heat(heat, max_heat)
 			hud.show_qte_feedback("⚠️ SLOPPY GRAB! +₱100 ⚠️", Color.YELLOW, 1.5)
+		var audio_mgr = get_node_or_null("/root/AudioManager")
+		if audio_mgr:
+			audio_mgr.play_sfx("snatch")
+			audio_mgr.play_sfx("cash")
 			
 	successful_snatch_cleanup()
 
@@ -387,3 +414,7 @@ func reset_game() -> void:
 		hud.update_loot(0, 0)
 		hud.update_heat(0.0, max_heat)
 		hud.update_gas_shop(gas_refill_price, 0.0, gas_purchase_cooldown)
+		
+	var audio_mgr = get_node_or_null("/root/AudioManager")
+	if audio_mgr:
+		audio_mgr.play_bgm("game")

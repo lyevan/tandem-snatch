@@ -12,6 +12,8 @@ extends CanvasLayer
 
 @onready var game_over_panel = $GameOverPanel
 @onready var game_over_message = $GameOverPanel/VBox/MessageLabel
+@onready var game_over_restart_btn = $GameOverPanel/VBox/RestartButton if has_node("GameOverPanel/VBox/RestartButton") else null
+@onready var game_over_menu_btn = $GameOverPanel/VBox/MainMenuButton if has_node("GameOverPanel/VBox/MainMenuButton") else null
 @onready var feedback_label = $FeedbackLabel
 @onready var qte_feedback_label = $QTEFeedbackLabel
 @onready var qte_panel = $QTEPanel
@@ -41,15 +43,52 @@ var _is_qte_panel_shaking: bool = false
 var _is_qte_pulsing: bool = false
 var _qte_feedback_tween: Tween = null
 
+func _ready() -> void:
+	# Connect Game Over screen buttons if they exist
+	if game_over_restart_btn:
+		game_over_restart_btn.pressed.connect(_on_game_over_restart_pressed)
+	if game_over_menu_btn:
+		game_over_menu_btn.pressed.connect(_on_game_over_menu_pressed)
+		
+	# Setup UI hover/press sound effects for the game HUD buttons recursively
+	_setup_button_sounds(self)
+
+func _setup_button_sounds(node: Node) -> void:
+	var audio_mgr = get_node_or_null("/root/AudioManager")
+	for child in node.get_children():
+		if child is Button:
+			child.mouse_entered.connect(func(): if audio_mgr: audio_mgr.play_sfx("hover"))
+			child.focus_entered.connect(func(): if audio_mgr: audio_mgr.play_sfx("hover"))
+			child.pressed.connect(func(): if audio_mgr: audio_mgr.play_sfx("press"))
+		elif child.get_child_count() > 0:
+			_setup_button_sounds(child)
+
 func _process(delta: float):
+	# Handle rapid police strobe lights on Max Heat (100%)
 	if _is_max_heat:
 		_strobe_timer += delta
 		if _strobe_timer >= 0.15: 
 			_strobe_timer = 0.0
-			if heat_meter.modulate == Color.RED:
-				heat_meter.modulate = Color.CORNFLOWER_BLUE 
-			else:
-				heat_meter.modulate = Color.RED 
+			
+			var style = wanted_level_panel.get_theme_stylebox("panel").duplicate()
+			if style is StyleBoxFlat:
+				style.border_width_left = 3
+				style.border_width_top = 3
+				style.border_width_right = 3
+				style.border_width_bottom = 3
+				
+				if heat_meter.modulate == Color.RED:
+					heat_meter.modulate = Color.CORNFLOWER_BLUE # Blue strobe
+					style.border_color = Color.CORNFLOWER_BLUE
+					style.shadow_color = Color(0.0, 0.5, 1.0, 0.45)
+				else:
+					heat_meter.modulate = Color.RED # Red strobe
+					style.border_color = Color.RED
+					style.shadow_color = Color(1.0, 0.0, 0.0, 0.45)
+				wanted_level_panel.add_theme_stylebox_override("panel", style)
+	else:
+		# Reset stylebox override if heat drops below max
+		wanted_level_panel.remove_theme_stylebox_override("panel")
 
 # --- Update Functions ---
 
@@ -104,6 +143,9 @@ func update_heat(current_heat: float, max_heat: float):
 				show_feedback("🚓 WANTED: HIGH CHASE! 🚓", Color.RED, 2.0)
 			3:
 				show_feedback("⚠️ WIDE ALERT: INTERCEPTS ACTIVE! ⚠️", Color.DEEP_PINK, 2.5)
+				var audio_mgr = get_node_or_null("/root/AudioManager")
+				if audio_mgr:
+					audio_mgr.play_sfx("siren")
 		
 	_previous_heat_level = current_heat_level
 	_is_max_heat = (current_heat_level == 3)
@@ -163,6 +205,19 @@ func show_game_over(busted: bool):
 		game_over_message.text = "CRASHED OUT! BUSTED!"
 	else:
 		game_over_message.text = "OUT OF GAS!"
+		
+	if game_over_restart_btn:
+		game_over_restart_btn.grab_focus()
+
+func _on_game_over_restart_pressed() -> void:
+	var player = get_tree().current_scene.get_node_or_null("Motorcycle")
+	if player and player.has_method("reset_game"):
+		player.call("reset_game")
+	else:
+		get_tree().reload_current_scene()
+
+func _on_game_over_menu_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
 
 func reset_hud():
 	if not is_node_ready():

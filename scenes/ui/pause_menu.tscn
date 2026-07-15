@@ -1,0 +1,120 @@
+[gd_scene load_steps=4 format=3 uid="uid://ddoep2r7ycr5d"]
+
+[ext_resource type="Theme" uid="uid://cgdjg2o7v3c1y" path="res://resources/themes/metro_arcade_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="2_script"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_paused"]
+font_size = 48
+font_color = Color(1, 0.8, 0, 1)
+outline_size = 6
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 0.5)
+
+[node name="PauseMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0509804, 0.0509804, 0.0784314, 0.627451)
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -180.0
+offset_right = 160.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="PauseTitle" type="Label" parent="PanelContainer/VBox"]
+layout_mode = 2
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_paused")
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PanelContainer/VBox"]
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../RestartButton")
+text = "RESUME"
+
+[node name="RestartButton" type="Button" parent="PanelContainer/VBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ResumeButton")
+focus_neighbor_bottom = NodePath("../MenuButton")
+text = "RESTART RUN"
+
+[node name="MenuButton" type="Button" parent="PanelContainer/VBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../RestartButton")
+focus_neighbor_bottom = NodePath("../QuitButton")
+text = "MAIN MENU"
+
+[node name="QuitButton" type="Button" parent="PanelContainer/VBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../MenuButton")
+text = "EXIT"
+
+[node name="ConfirmOverlay" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ConfirmOverlay"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ConfirmPrompt" type="Label" parent="ConfirmOverlay/VBox"]
+layout_mode = 2
+text = "SIGURADO KA BA?"
+label_settings = SubResource("LabelSettings_paused")
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="ConfirmOverlay/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="YesButton" type="Button" parent="ConfirmOverlay/VBox/HBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "YES"
+
+[node name="NoButton" type="Button" parent="ConfirmOverlay/VBox/HBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "NO"

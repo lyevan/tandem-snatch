@@ -1,0 +1,333 @@
+[gd_scene load_steps=4 format=3 uid="uid://chf5u8vd50mgy"]
+
+[ext_resource type="Theme" uid="uid://da33t87nmk10k" path="res://resources/themes/metro_arcade_theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://b0urpytc171pw" path="res://scripts/ui/main_menu.gd" id="2_script"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 42
+font_color = Color(1, 0.8, 0, 1)
+outline_size = 6
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 0.5)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainButtons" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="PlayButton" type="Button" parent="CenterContainer/MainButtons"]
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../ControlsButton")
+text = "PLAY"
+
+[node name="ControlsButton" type="Button" parent="CenterContainer/MainButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../PlayButton")
+focus_neighbor_bottom = NodePath("../SettingsButton")
+text = "HOW TO PLAY"
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/MainButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ControlsButton")
+focus_neighbor_bottom = NodePath("../CreditsButton")
+text = "SETTINGS"
+
+[node name="CreditsButton" type="Button" parent="CenterContainer/MainButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../SettingsButton")
+focus_neighbor_bottom = NodePath("../QuitButton")
+text = "CREDITS"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/MainButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../CreditsButton")
+text = "EXIT"
+
+[node name="SettingsOverlay" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -180.0
+offset_right = 250.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="SettingsOverlay"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SettingsTitle" type="Label" parent="SettingsOverlay/VBox"]
+layout_mode = 2
+text = "SETTINGS"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+
+[node name="SliderGrid" type="GridContainer" parent="SettingsOverlay/VBox"]
+layout_mode = 2
+columns = 2
+
+[node name="MasterLabel" type="Label" parent="SettingsOverlay/VBox/SliderGrid"]
+layout_mode = 2
+text = "Master Volume"
+
+[node name="MasterSlider" type="HSlider" parent="SettingsOverlay/VBox/SliderGrid"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 4
+value = 70.0
+
+[node name="MusicLabel" type="Label" parent="SettingsOverlay/VBox/SliderGrid"]
+layout_mode = 2
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsOverlay/VBox/SliderGrid"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 4
+value = 70.0
+
+[node name="SFXLabel" type="Label" parent="SettingsOverlay/VBox/SliderGrid"]
+layout_mode = 2
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="SettingsOverlay/VBox/SliderGrid"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 4
+value = 70.0
+
+[node name="BackButton" type="Button" parent="SettingsOverlay/VBox"]
+layout_mode = 2
+text = "BACK"
+
+[node name="CreditsOverlay" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -331.5
+offset_top = -231.25
+offset_right = 331.5
+offset_bottom = 231.25
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CreditsOverlay"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CreditsTitle" type="Label" parent="CreditsOverlay/VBox"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "DEVELOPERS"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="CreditsOverlay/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CreditsText" type="RichTextLabel" parent="CreditsOverlay/VBox"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+bbcode_enabled = true
+text = "[center][color=yellow][b]Tandem Snatch: Metro Run[/b][/color]
+
+[b]Game Design & Code[/b]
+Incygnia & Regius
+
+[b]Aesthetics & Sprites[/b]
+Aeriibluu, Drayven & Incygnia
+
+[b]Narrative and Sound Design[/b]
+Lee & Bigz
+
+
+[color=yellow][b]Thank you for playing Tandem Snatch <3[/b]
+"
+
+[node name="HSeparator2" type="HSeparator" parent="CreditsOverlay/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="CreditsOverlay/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "BACK"
+
+[node name="TutorialOverlay" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -210.0
+offset_right = 260.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="TutorialOverlay"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="TutorialTitle" type="Label" parent="TutorialOverlay/VBox"]
+layout_mode = 2
+text = "HOW TO PLAY"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+
+[node name="ControlsGrid" type="GridContainer" parent="TutorialOverlay/VBox"]
+layout_mode = 2
+columns = 2
+
+[node name="SteerLabel" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Lane Steer (A / D)"
+
+[node name="SteerDesc" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Shift motorcycle left/right"
+
+[node name="NitroLabel" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Nitro Speed (Shift)"
+
+[node name="NitroDesc" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Hold down for double speed (drains gas!)"
+
+[node name="QTELabel" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Hablot / QTE (Arrow Keys)"
+
+[node name="QTEDesc" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Match the arrow prompt to snatch goods!"
+
+[node name="CamLabel" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Camera POV (V)"
+
+[node name="CamDesc" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Toggle driver/snatcher perspectives"
+
+[node name="RestartLabel" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Quick Restart (R)"
+
+[node name="RestartDesc" type="Label" parent="TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Reload current run instantly"
+
+[node name="BackButton" type="Button" parent="TutorialOverlay/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "BACK"
+
+[node name="QuitConfirmOverlay" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="QuitConfirmOverlay"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="QuitPrompt" type="Label" parent="QuitConfirmOverlay/VBox"]
+layout_mode = 2
+text = "SIGURADO KA BA?"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="QuitConfirmOverlay/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="YesButton" type="Button" parent="QuitConfirmOverlay/VBox/HBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "YES"
+
+[node name="NoButton" type="Button" parent="QuitConfirmOverlay/VBox/HBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "NO"
+
+[node name="TransitionOverlay" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

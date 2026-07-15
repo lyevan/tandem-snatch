@@ -99,46 +99,45 @@ border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.0, 0.9, 1.0, 0.85)
+border_color = Color(0, 0.9, 1, 0.85)
 corner_radius_top_left = 14
 corner_radius_top_right = 14
 corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
+shadow_color = Color(0, 0.85, 1, 0.35)
 shadow_size = 12
-shadow_color = Color(0.0, 0.85, 1.0, 0.35)
-shadow_offset = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_qte_header"]
+font = ExtResource("2_efote")
+font_size = 22
+font_color = Color(0.7, 0.9, 1, 0.85)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_arrow_box"]
 content_margin_left = 10.0
 content_margin_top = 6.0
 content_margin_right = 10.0
 content_margin_bottom = 6.0
-bg_color = Color(0.0, 0.9, 1.0, 0.18)
+bg_color = Color(0, 0.9, 1, 0.18)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.0, 0.9, 1.0, 0.9)
+border_color = Color(0, 0.9, 1, 0.9)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="LabelSettings" id="LabelSettings_qte_header"]
-font = ExtResource("2_efote")
-font_size = 22
-font_color = Color(0.7, 0.9, 1.0, 0.85)
-outline_size = 3
-outline_color = Color(0, 0, 0, 1)
-
 [sub_resource type="LabelSettings" id="LabelSettings_qte_arrow"]
 font = ExtResource("2_efote")
 font_size = 56
-font_color = Color(0.0, 0.95, 1.0, 1.0)
+font_color = Color(0, 0.95, 1, 1)
 outline_size = 6
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 8
-shadow_color = Color(0.0, 0.85, 1.0, 0.5)
+shadow_color = Color(0, 0.85, 1, 0.5)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qte_bar_bg"]
 bg_color = Color(0.06, 0.06, 0.1, 0.9)
@@ -146,14 +145,7 @@ border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.0, 0.9, 1.0, 0.25)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qte_bar_fill"]
-bg_color = Color(0.0, 0.9, 1.0, 1.0)
+border_color = Color(0, 0.9, 1, 0.25)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
@@ -161,7 +153,7 @@ corner_radius_bottom_left = 6
 
 [sub_resource type="Gradient" id="Gradient_qte"]
 offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(0.9, 0.15, 0.15, 1, 0.9, 0.8, 0.0, 1, 0.0, 0.9, 1.0, 1)
+colors = PackedColorArray(0.9, 0.15, 0.15, 1, 0.9, 0.8, 0, 1, 0, 0.9, 1, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_qte"]
 gradient = SubResource("Gradient_qte")
@@ -259,15 +251,16 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -220.0
-offset_top = -110.0
+offset_top = -180.0
 offset_right = 220.0
-offset_bottom = 110.0
+offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_gameover")
 
 [node name="VBox" type="VBoxContainer" parent="GameOverPanel"]
 layout_mode = 2
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="GameOverPanel/VBox"]
@@ -284,9 +277,20 @@ horizontal_alignment = 1
 
 [node name="PromptLabel" type="Label" parent="GameOverPanel/VBox"]
 layout_mode = 2
-text = "Try Again? (Press R to Restart)"
+text = "Press R to Restart"
 label_settings = SubResource("LabelSettings_ne771")
 horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="GameOverPanel/VBox"]
+visible = false
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../MainMenuButton")
+text = "RESTART RUN"
+
+[node name="MainMenuButton" type="Button" parent="GameOverPanel/VBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../RestartButton")
+text = "MAIN MENU"
 
 [node name="FeedbackLabel" type="Label" parent="."]
 anchors_preset = 5
