@@ -21,11 +21,16 @@ extends CanvasLayer
 @onready var qte_timer = $QTEPanel/VBox/TimerContainer/QTETimer
 @onready var qte_arrow_box = $QTEPanel/VBox/ArrowBox
 
+# --- Snatch Hand References ---
+@onready var left_hand_snatch = $LeftHandSnatch if has_node("LeftHandSnatch") else null
+@onready var right_hand_snatch = $RightHandSnatch if has_node("RightHandSnatch") else null
+
 # --- Optional Gas Shop UI References ---
 @onready var gas_shop_panel = $GasShopPanel if has_node("GasShopPanel") else null
 @onready var gas_shop_label = $GasShopPanel/VBox/PriceLabel if has_node("GasShopPanel/VBox/PriceLabel") else null
 @onready var gas_cooldown_bar = $GasShopPanel/VBox/CooldownBar if has_node("GasShopPanel/VBox/CooldownBar") else null
 
+@onready var speed_lines_overlay = $SpeedLinesOverlay if has_node("SpeedLinesOverlay") else null
 signal qte_ready 
 
 # --- Internal State Tracking ---
@@ -42,6 +47,8 @@ var _qte_panel_original_x: float = 0.0
 var _is_qte_panel_shaking: bool = false
 var _is_qte_pulsing: bool = false
 var _qte_feedback_tween: Tween = null
+var _is_speed_lines_active: bool = false
+var _speed_lines_tween: Tween = null
 
 func _ready() -> void:
 	# Connect Game Over screen buttons if they exist
@@ -52,6 +59,12 @@ func _ready() -> void:
 		
 	# Setup UI hover/press sound effects for the game HUD buttons recursively
 	_setup_button_sounds(self)
+	
+	# Automatically hide hands when their animation finishes!
+	if left_hand_snatch:
+		left_hand_snatch.animation_finished.connect(func(): left_hand_snatch.visible = false)
+	if right_hand_snatch:
+		right_hand_snatch.animation_finished.connect(func(): right_hand_snatch.visible = false)
 
 func _setup_button_sounds(node: Node) -> void:
 	var audio_mgr = get_node_or_null("/root/AudioManager")
@@ -453,3 +466,63 @@ func hide_qte():
 	if qte_panel.scale.x < 0.6:
 		qte_panel.visible = false
 		qte_panel.scale = Vector2.ONE
+
+func set_speed_lines_active(active: bool) -> void:
+	if not is_node_ready() or not speed_lines_overlay:
+		return
+		
+	var material = speed_lines_overlay.material as ShaderMaterial
+	if not material:
+		return
+		
+	if _speed_lines_tween:
+		_speed_lines_tween.kill()
+		
+	_speed_lines_tween = create_tween()
+	
+	if active:
+		speed_lines_overlay.visible = true
+		# Smooth, punchy build-up when Nitro starts
+		_speed_lines_tween.tween_property(material, "shader_parameter/master_opacity", 1.0, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	else:
+		# INSTANT SNAP OFF: Drops opacity fast at the start, then trails out in just 0.10 seconds!
+		_speed_lines_tween.tween_property(material, "shader_parameter/master_opacity", 0.0, 0.10).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		_speed_lines_tween.tween_callback(func(): speed_lines_overlay.visible = false)
+	if not is_node_ready() or not speed_lines_overlay:
+		return
+		
+	# Prevent spamming new tweens if the state hasn't changed
+	if active == _is_speed_lines_active:
+		return
+		
+	_is_speed_lines_active = active
+	
+	if _speed_lines_tween:
+		_speed_lines_tween.kill()
+		
+	_speed_lines_tween = create_tween()
+	
+	if active:
+		speed_lines_overlay.visible = true
+		speed_lines_overlay.modulate.a = 0.0
+		# Quick punchy fade-in
+		_speed_lines_tween.tween_property(speed_lines_overlay, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	else:
+		# Smooth fade-out
+		_speed_lines_tween.tween_property(speed_lines_overlay, "modulate:a", 0.0, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		_speed_lines_tween.tween_callback(func(): speed_lines_overlay.visible = false)
+
+func play_snatch_hand(is_ped_on_left: bool) -> void:
+	if not is_node_ready():
+		await ready
+		
+	if is_ped_on_left and left_hand_snatch:
+		left_hand_snatch.visible = true
+		left_hand_snatch.frame = 0 # Start from frame 0 for a clean grab
+		left_hand_snatch.play("left_hand_snatch") # Your exact left animation name
+		print("🦾 Reaching LEFT toward pedestrian!")
+	elif not is_ped_on_left and right_hand_snatch:
+		right_hand_snatch.visible = true
+		right_hand_snatch.frame = 0
+		right_hand_snatch.play("right_hand_snatch") # Your exact right animation name
+		print("🦾 Reaching RIGHT toward pedestrian!")

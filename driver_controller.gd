@@ -102,13 +102,16 @@ func _physics_process(delta: float) -> void:
 		var target_fov = 100.0 if is_nitro_active else 75.0
 		
 		camera.fov = lerpf(camera.fov, target_fov, 8.0 * delta)
-		
+		if hud:
+			hud.set_speed_lines_active(is_nitro_active)
 		if is_invincible:
 			target_speed = maxf(1.0, target_speed - 4.0) 
 			
 		Global.road_speed = lerpf(Global.road_speed, target_speed, 4.0 * delta)
 	else:
 		is_nitro_active = false
+		if hud:
+			hud.set_speed_lines_active(false) # Ensure lines turn off if busted!
 		
 	# 2. FUEL DRAIN & COOLDOWNS
 	if not is_busted:
@@ -177,17 +180,21 @@ func _physics_process(delta: float) -> void:
 				miss_snatch("TOO LATE!")
 
 	# 5. HANDLEBAR STEERING & TILT
-	var target_steer = -input_dir * max_steer_angle
+	var target_steer = input_dir * max_steer_angle
+	var target_z = -input_dir * 0.003
 	if fork:
-		fork.rotation_degrees.z = lerp(fork.rotation_degrees.z, target_steer, 5.0 * delta)
+	# Smoothly rotate the fork
+		fork.rotation_degrees.y = lerp(fork.rotation_degrees.y, target_steer, 5.0 * delta)
+		# Smoothly shift the local Z position
+		fork.position.z = lerp(fork.position.z, target_z, 5.0 * delta)
 	rotation_degrees.z = lerp(rotation_degrees.z, -input_dir * 15.0, 10.0 * delta)
 
 	# 6. SPIN THE WHEELS
 	var current_spin = wheel_spin_speed if not is_busted else 0.0
 	if wheel_f:
-		wheel_f.rotation_degrees.y -= current_spin * 360.0 * delta
+		wheel_f.rotation_degrees.z -= current_spin * 360.0 * delta
 	if wheel_r:
-		wheel_r.rotation_degrees.y -= current_spin * 360.0 * delta
+		wheel_r.rotation_degrees.z -= current_spin * 360.0 * delta
 
 	# 7. SCREEN SHAKE JUICE
 	if current_shake_strength > 0.0:
@@ -317,7 +324,13 @@ func _on_qte_hud_ready():
 func evaluate_snatch_attempt() -> void:
 	is_in_qte_window = false
 	
-	# --- TIER 1: PERFECT SNATCH (< 0.05s) ---
+	# 1. CALCULATE WHICH SIDE THE PEDESTRIAN IS ON IN 3D SPACE:
+	# (We check this before adding rewards so the reference is guaranteed valid)
+	var is_ped_on_left: bool = false
+	if is_instance_valid(active_pedestrian):
+		is_ped_on_left = active_pedestrian.global_position.x < global_position.x
+	
+	# --- TIER 1: PERFECT SNATCH ---
 	if qte_timer <= perfect_threshold:
 		cash += 500
 		heat = min(heat + 15.0, max_heat)
@@ -325,12 +338,11 @@ func evaluate_snatch_attempt() -> void:
 			hud.update_loot(cash, 500)
 			hud.update_heat(heat, max_heat)
 			hud.show_qte_feedback("⚡ PERFECT SNATCH! +₱500 ⚡", Color.GOLD, 1.5)
-		var audio_mgr = get_node_or_null("/root/AudioManager")
-		if audio_mgr:
-			audio_mgr.play_sfx("snatch")
-			audio_mgr.play_sfx("cash")
 			
-	# --- TIER 2: GOOD SNATCH (0.05s to 0.15s) ---
+			# 🦾 Reaches left or right based on physical 3D position!
+			hud.play_snatch_hand(is_ped_on_left)
+			
+	# --- TIER 2: GOOD SNATCH ---
 	elif qte_timer <= good_threshold:
 		cash += 250
 		heat = min(heat + 10.0, max_heat)
@@ -338,12 +350,11 @@ func evaluate_snatch_attempt() -> void:
 			hud.update_loot(cash, 250)
 			hud.update_heat(heat, max_heat)
 			hud.show_qte_feedback("💰 GOOD SNATCH! +₱250 💰", Color.SPRING_GREEN, 1.5)
-		var audio_mgr = get_node_or_null("/root/AudioManager")
-		if audio_mgr:
-			audio_mgr.play_sfx("snatch")
-			audio_mgr.play_sfx("cash")
 			
-	# --- TIER 3: SLOPPY / LATE SNATCH (> 0.15s) ---
+			# 🦾 Reaches left or right based on physical 3D position!
+			hud.play_snatch_hand(is_ped_on_left)
+			
+	# --- TIER 3: SLOPPY / LATE SNATCH ---
 	else:
 		cash += 100
 		heat = min(heat + 5.0, max_heat)
@@ -351,10 +362,9 @@ func evaluate_snatch_attempt() -> void:
 			hud.update_loot(cash, 100)
 			hud.update_heat(heat, max_heat)
 			hud.show_qte_feedback("⚠️ SLOPPY GRAB! +₱100 ⚠️", Color.YELLOW, 1.5)
-		var audio_mgr = get_node_or_null("/root/AudioManager")
-		if audio_mgr:
-			audio_mgr.play_sfx("snatch")
-			audio_mgr.play_sfx("cash")
+			
+			# Uncomment if you want sloppy snatches to trigger the hand animation too:
+			# hud.play_snatch_hand(is_ped_on_left)
 			
 	successful_snatch_cleanup()
 
@@ -410,6 +420,7 @@ func reset_game() -> void:
 		
 	if hud:
 		hud.reset_hud()
+		hud.set_speed_lines_active(false)
 		hud.update_gas(current_fuel, max_fuel, false)
 		hud.update_loot(0, 0)
 		hud.update_heat(0.0, max_heat)
