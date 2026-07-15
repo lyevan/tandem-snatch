@@ -53,6 +53,7 @@ var _police_vignette: ColorRect = null
 var _is_speed_lines_active: bool = false
 var _speed_lines_tween: Tween = null
 
+var siren_audio: AudioStreamPlayer = null
 func _ready() -> void:
 	# Connect Game Over screen buttons if they exist
 	if game_over_restart_btn:
@@ -84,7 +85,7 @@ func _setup_button_sounds(node: Node) -> void:
 
 func _process(delta: float):
 	# Handle rapid police strobe lights on Max Heat (100%)
-	if _is_max_heat:
+	if Global.is_police_heat_full:
 		_strobe_timer += delta
 		if _strobe_timer >= 0.15: 
 			_strobe_timer = 0.0
@@ -162,7 +163,10 @@ func update_heat(current_heat: float, max_heat: float):
 	var heat_percentage = current_heat / max_heat
 	var current_heat_level = 0
 	
-	if heat_percentage <= 0.25:
+	# If we are actively running from the cops, force the UI to stay at Level 3 (Max Alert)!
+	if Global.is_police_heat_full:
+		current_heat_level = 3
+	elif heat_percentage <= 0.25:
 		current_heat_level = 0 
 	elif heat_percentage <= 0.60:
 		current_heat_level = 1 
@@ -171,32 +175,38 @@ func update_heat(current_heat: float, max_heat: float):
 	else:
 		current_heat_level = 3 
 		
-	if current_heat_level > _previous_heat_level:
+	# --- NEW: Clean Level Transition Logic ---
+	if current_heat_level != _previous_heat_level:
 		_pulse_alert_ui()
+		
+		# If we just climbed UP to Level 3, start the siren!
+		if current_heat_level == 3:
+			show_feedback("⚠️ WIDE ALERT: INTERCEPTS ACTIVE! ⚠️", Color.DEEP_PINK, 2.5)
+			start_siren()
+		# If we just dropped DOWN from Level 3 (e.g., survived the 15s chase), stop the siren!
+		elif _previous_heat_level == 3:
+			stop_siren()
+			
 		match current_heat_level:
 			1:
 				show_feedback("🚨 WANTED: MAY SUMISIGAW! 🚨", Color.ORANGE, 2.0)
 			2:
 				show_feedback("🚓 WANTED: HIGH CHASE! 🚓", Color.RED, 2.0)
-			3:
-				show_feedback("⚠️ WIDE ALERT: INTERCEPTS ACTIVE! ⚠️", Color.DEEP_PINK, 2.5)
-				var audio_mgr = get_node_or_null("/root/AudioManager")
-				if audio_mgr:
-					audio_mgr.play_sfx("siren")
 		
 	_previous_heat_level = current_heat_level
 	_is_max_heat = (current_heat_level == 3)
 	
-	match current_heat_level:
-		0:
-			heat_meter.modulate = Color(0.0, 1.0, 0.0) 
-		1:
-			heat_meter.modulate = Color(1.0, 0.5, 0.0) 
-		2:
-			heat_meter.modulate = Color(1.0, 0.0, 0.0) 
-		3:
-			heat_meter.modulate = Color(1.0, 0.0, 0.0) 
-
+	# Only change the meter color if we aren't currently strobing in _process()!
+	if not Global.is_police_heat_full:
+		match current_heat_level:
+			0:
+				heat_meter.modulate = Color(0.0, 1.0, 0.0) 
+			1:
+				heat_meter.modulate = Color(1.0, 0.5, 0.0) 
+			2:
+				heat_meter.modulate = Color(1.0, 0.0, 0.0) 
+			3:
+				heat_meter.modulate = Color(1.0, 0.0, 0.0)
 func update_loot(total_cash: int, change_amount: int):
 	if not is_node_ready():
 		await ready
@@ -216,16 +226,20 @@ func update_loot(total_cash: int, change_amount: int):
 	tween.tween_property(parent_loot_node, "scale", Vector2(1.1, 1.1), 0.08)
 	tween.tween_property(parent_loot_node, "scale", Vector2.ONE, 0.08)
 
-func update_gas_shop(price: int, cooldown_remaining: float, max_cooldown: float):
+# Add 'play_sound: bool = false' as an optional parameter (defaults to false so initial loads are quiet)
+func update_gas_shop(price: int, cooldown_remaining: float, max_cooldown: float, play_sound: bool = false):
 	if not is_node_ready():
 		await ready
 		
 	if gas_shop_label:
 		if cooldown_remaining > 0.0:
-			gas_shop_label.text = "REFUEL [SPACE]: %.1fs" % cooldown_remaining
+			gas_shop_label.text = "REFUEL: %.1fs" % cooldown_remaining
 			gas_shop_label.modulate = Color.ORANGE
 		else:
-			gas_shop_label.text = "REFUEL [SPACE]: ₱%d" % price
+			if play_sound:
+				Audio.play_sfx(preload("res://assets/sfx/sci_fi_select_big.wav"))
+				
+			gas_shop_label.text = "REFUEL: ₱%d" % price
 			gas_shop_label.modulate = Color.CYAN
 			
 	if gas_cooldown_bar:
@@ -236,7 +250,7 @@ func update_gas_shop(price: int, cooldown_remaining: float, max_cooldown: float)
 func show_game_over(busted: bool):
 	if not is_node_ready():
 		await ready
-		
+	Audio.play_sfx(preload("res://assets/sfx/game_over.wav"), 15)
 	game_over_panel.visible = true
 	if busted:
 		game_over_message.text = "CRASHED OUT! BUSTED!"
@@ -269,6 +283,7 @@ func reset_hud():
 	qte_panel.visible = false
 	if _feedback_tween:
 		_feedback_tween.kill()
+	last_item_label.text = "LAST SNATCH: None"
 		
 	qte_feedback_label.text = ""
 	qte_feedback_label.visible = false
@@ -381,8 +396,10 @@ func show_qte_feedback(text: String, color: Color = Color.WHITE, duration: float
 	_qte_feedback_tween.tween_callback(func(): qte_feedback_label.visible = false)
 
 func _show_low_fuel_warning():
+	
 	var now = Time.get_ticks_msec() / 1000.0
 	if now - _last_fuel_warning_time > 3.0: 
+		Audio.play_sfx(preload("res://assets/sfx/low_gas.wav"), 20)
 		_last_fuel_warning_time = now
 		show_feedback("⚠️ WARNING: LOW GAS TANK! ⚠️", Color.RED, 1.5)
 
@@ -595,3 +612,19 @@ func play_snatch_hand(is_ped_on_left: bool) -> void:
 		right_hand_snatch.frame = 0
 		right_hand_snatch.play("right_hand_snatch") # Your exact right animation name
 		print("🦾 Reaching RIGHT toward pedestrian!")
+
+func start_siren():
+	# Don't start a new siren if one is already actively playing!
+	if is_instance_valid(siren_audio) and siren_audio.playing:
+		return
+		
+	siren_audio = Audio.play_sfx(preload("res://assets/bgm/police_siren.mp3"), 15)
+	
+	# Force the MP3 to loop continuously so it lasts for the entire 15-second chase!
+	if siren_audio and siren_audio.stream is AudioStreamMP3:
+		siren_audio.stream.loop = true
+
+func stop_siren():
+	# Fade it out over 1.2 seconds and automatically delete the player
+	Audio.stop_sfx(siren_audio, 1.2)
+	siren_audio = null # Clear the variable so we know it stopped

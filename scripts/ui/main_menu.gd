@@ -32,7 +32,7 @@ var _audio_mgr = null
 func _ready() -> void:
 	# Lookup AudioManager autoload safely without crashing if it's not registered
 	_audio_mgr = get_node_or_null("/root/AudioManager")
-
+	Audio.play_bgm(preload("res://assets/bgm/main_menu.mp3"))
 	# Hide sub-panels by default
 	settings_overlay.visible = false
 	credits_overlay.visible = false
@@ -101,7 +101,9 @@ func _on_play_pressed() -> void:
 	if _audio_mgr:
 		_audio_mgr.play_sfx("press")
 		_audio_mgr.stop_bgm()
-		
+	
+	Audio.stop_bgm()
+	Audio.play_bgm(preload("res://assets/bgm/main.mp3"))
 	# Fade-out screen transition
 	var tween = create_tween()
 	tween.tween_property(transition_overlay, "color:a", 1.0, 0.5)

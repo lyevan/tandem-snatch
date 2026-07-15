@@ -1,4 +1,4 @@
-[gd_scene load_steps=101 format=4 uid="uid://dlx2um80cpw1h"]
+[gd_scene load_steps=103 format=4 uid="uid://dlx2um80cpw1h"]
 
 [ext_resource type="Script" uid="uid://dp7r263uie2n7" path="res://world_spawner.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://03sxxu8dfj2w" path="res://road_module.tscn" id="2_1bvp3"]
@@ -1142,6 +1142,25 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 0.5)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w48qg"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.04, 0.04, 0.07, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="LabelSettings" id="LabelSettings_w48qg"]
+font = ExtResource("7_272bh")
+font_size = 38
+
 [node name="Node3D" type="Node3D"]
 
 [node name="WorldSpawner" type="Node3D" parent="."]
@@ -1340,6 +1359,13 @@ transform = Transform3D(1, 0, 0, 0, 0.573476, 0.819222, 0, -0.819222, 0.573476, 
 
 [node name="HUD" parent="." instance=ExtResource("6_7mycd")]
 
+[node name="WantedLevel" parent="HUD" index="1"]
+offset_left = -273.0
+offset_bottom = 146.0
+
+[node name="FeedbackLabel" parent="HUD" index="4"]
+offset_left = -322.0
+
 [node name="LeftHandSnatch" type="AnimatedSprite2D" parent="HUD"]
 visible = false
 position = Vector2(642, 425)
@@ -1368,7 +1394,7 @@ grow_vertical = 2
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -350.0
+offset_left = -329.0
 offset_top = 89.0
 offset_right = 350.0
 offset_bottom = 159.0
@@ -1378,21 +1404,25 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GasShopPanel" type="PanelContainer" parent="HUD"]
-offset_left = 1051.0
-offset_top = 536.0
-offset_right = 1197.0
-offset_bottom = 590.0
+offset_left = 1042.0
+offset_top = 581.0
+offset_right = 1225.0
+offset_bottom = 701.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_w48qg")
 
 [node name="VBox" type="VBoxContainer" parent="HUD/GasShopPanel"]
 layout_mode = 2
 
 [node name="PriceLabel" type="Label" parent="HUD/GasShopPanel/VBox"]
 layout_mode = 2
+label_settings = SubResource("LabelSettings_w48qg")
 
 [node name="CooldownBar" type="ProgressBar" parent="HUD/GasShopPanel/VBox"]
 custom_minimum_size = Vector2(0, 25.2)
 layout_mode = 2
 show_percentage = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [connection signal="area_entered" from="Car/HurtBox" to="Car" method="_on_hurtbox_area_entered"]
 
