@@ -83,14 +83,23 @@ func _physics_process(delta: float) -> void:
 	if Input.is_key_pressed(KEY_R):
 		reset_game()
 		return
-		
+			
 	if not is_busted:
 		# Nitro is active when Shift is held down
 		is_nitro_active = Input.is_key_pressed(KEY_SHIFT)
 		var target_speed = 15.0 if is_nitro_active else 5.0 # Boost highway scrolling speed
+		
+		# 1. Determine the target FOV based on nitro state
+		var target_fov = 100.0 if is_nitro_active else 75.0
+		
+		# 2. Smoothly transition CURRENT fov to the TARGET fov
+		camera.fov = lerpf(camera.fov, target_fov, 8.0 * delta)
+		
 		if is_invincible:
 			target_speed = maxf(1.0, target_speed - 4.0) # Apply speed penalty gracefully
+			
 		Global.road_speed = lerpf(Global.road_speed, target_speed, 4.0 * delta)
+		
 	else:
 		is_nitro_active = false
 		
