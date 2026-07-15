@@ -47,6 +47,9 @@ var _qte_panel_original_x: float = 0.0
 var _is_qte_panel_shaking: bool = false
 var _is_qte_pulsing: bool = false
 var _qte_feedback_tween: Tween = null
+
+# Flashing vignette ColorRect reference
+var _police_vignette: ColorRect = null
 var _is_speed_lines_active: bool = false
 var _speed_lines_tween: Tween = null
 
@@ -59,6 +62,9 @@ func _ready() -> void:
 		
 	# Setup UI hover/press sound effects for the game HUD buttons recursively
 	_setup_button_sounds(self)
+	
+	# Initialize police vignette overlays
+	_init_police_vignette()
 	
 	# Automatically hide hands when their animation finishes!
 	if left_hand_snatch:
@@ -94,14 +100,32 @@ func _process(delta: float):
 					heat_meter.modulate = Color.CORNFLOWER_BLUE # Blue strobe
 					style.border_color = Color.CORNFLOWER_BLUE
 					style.shadow_color = Color(0.0, 0.5, 1.0, 0.45)
+					
+					# Alternate vignette: Left blue, Right red
+					if _police_vignette:
+						_police_vignette.visible = true
+						var mat = _police_vignette.material as ShaderMaterial
+						if mat:
+							mat.set_shader_parameter("left_color", Color(0.0, 0.3, 1.0, 0.65)) # Ice blue
+							mat.set_shader_parameter("right_color", Color(1.0, 0.0, 0.0, 0.65)) # Red
 				else:
 					heat_meter.modulate = Color.RED # Red strobe
 					style.border_color = Color.RED
 					style.shadow_color = Color(1.0, 0.0, 0.0, 0.45)
+					
+					# Alternate vignette: Left red, Right blue
+					if _police_vignette:
+						_police_vignette.visible = true
+						var mat = _police_vignette.material as ShaderMaterial
+						if mat:
+							mat.set_shader_parameter("left_color", Color(1.0, 0.0, 0.0, 0.65)) # Red
+							mat.set_shader_parameter("right_color", Color(0.0, 0.3, 1.0, 0.65)) # Ice blue
 				wanted_level_panel.add_theme_stylebox_override("panel", style)
 	else:
 		# Reset stylebox override if heat drops below max
 		wanted_level_panel.remove_theme_stylebox_override("panel")
+		if _police_vignette and _police_vignette.visible:
+			_police_vignette.visible = false
 
 # --- Update Functions ---
 
@@ -466,6 +490,51 @@ func hide_qte():
 	if qte_panel.scale.x < 0.6:
 		qte_panel.visible = false
 		qte_panel.scale = Vector2.ONE
+
+func _init_police_vignette() -> void:
+	# Create full screen overlay ColorRect
+	_police_vignette = ColorRect.new()
+	_police_vignette.name = "PoliceVignetteOverlay"
+	_police_vignette.visible = false
+	_police_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Add and sort behind other HUD nodes so it frames the screen but doesn't cover text
+	add_child(_police_vignette)
+	move_child(_police_vignette, 0)
+	
+	# Anchor to cover full screen
+	_police_vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE)
+	
+	# Create vignette shader
+	var shader = Shader.new()
+	shader.code = "shader_type canvas_item;
+	
+	uniform vec4 left_color : source_color = vec4(1.0, 0.0, 0.0, 0.5);
+	uniform vec4 right_color : source_color = vec4(0.0, 0.0, 1.0, 0.5);
+	uniform float vignette_width : hint_range(0.0, 1.0) = 0.45;
+	uniform float vignette_power : hint_range(0.0, 5.0) = 2.0;
+	
+	void fragment() {
+		float dist_left = UV.x;
+		float dist_right = 1.0 - UV.x;
+		
+		float left_factor = pow(clamp((vignette_width - dist_left) / vignette_width, 0.0, 1.0), vignette_power);
+		float right_factor = pow(clamp((vignette_width - dist_right) / vignette_width, 0.0, 1.0), vignette_power);
+		
+		vec4 final_color = vec4(0.0);
+		if (left_factor > 0.0) {
+			final_color += left_color * left_factor;
+		}
+		if (right_factor > 0.0) {
+			final_color += right_color * right_factor;
+		}
+		
+		COLOR = final_color;
+	}"
+	
+	var mat = ShaderMaterial.new()
+	mat.shader = shader
+	_police_vignette.material = mat
 
 func set_speed_lines_active(active: bool) -> void:
 	if not is_node_ready() or not speed_lines_overlay:
