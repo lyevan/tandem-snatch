@@ -13,6 +13,12 @@ func _ready() -> void:
 	for i in range(initial_modules):
 		spawn_module(-i * module_length)
 
+func reset_spawner() -> void:
+	for child in get_children():
+		child.queue_free()
+	for i in range(initial_modules):
+		spawn_module(-i * module_length)
+
 func _process(delta: float) -> void:
 	# 1. Move ALL active road pieces backward together (prevents micro-drifting)
 	for child in get_children():

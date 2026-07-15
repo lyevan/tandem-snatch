@@ -85,12 +85,13 @@ func generate_4lane_traffic(horizon_z: float) -> void:
 		var random_car_variant: PackedScene = obstacle_scenes.pick_random()
 		var car_instance = random_car_variant.instantiate()
 		
-		get_tree().current_scene.add_child(car_instance)
+		car_instance.add_to_group("obstacles")
+		get_tree().current_scene.add_child.call_deferred(car_instance)
 		
 		var spawn_x = target_lane.global_position.x
 		var random_z_stagger = randf_range(-1.2, 1.2)
 		
-		car_instance.global_position = Vector3(spawn_x, 0.1, horizon_z + random_z_stagger)
+		car_instance.position = Vector3(spawn_x, 0.1, horizon_z + random_z_stagger)
 		
 		if spawn_incoming:
 			car_instance.rotation_degrees.y = 0.0

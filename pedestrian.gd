@@ -15,6 +15,7 @@ var possible_prompts: Dictionary = {
 var required_action: String = ""
 
 func _ready() -> void:
+	add_to_group("pedestrians")
 	# Pick a random action key from our dictionary
 	var keys = possible_prompts.keys()
 	required_action = keys.pick_random()
