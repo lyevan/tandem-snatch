@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://chf5u8vd50mgy"]
+[gd_scene load_steps=6 format=3 uid="uid://chf5u8vd50mgy"]
 
 [ext_resource type="Theme" uid="uid://da33t87nmk10k" path="res://resources/themes/metro_arcade_theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://cp2n3rfgml8gh" path="res://scripts/ui/main_menu.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://1ju2sw2g26rl" path="res://assets/SPLASH-ART/SPLASH_ART.png" id="3_1g8jr"]
+[ext_resource type="Texture2D" uid="uid://dm0ct5gg04sug" path="res://assets/SPLASH-ART/GAMETITLEkayle_snatch.png" id="4_title"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
 font_size = 42
@@ -48,12 +49,23 @@ theme_override_constants/margin_bottom = 60
 [node name="MenuLayout" type="Control" parent="MarginContainer"]
 layout_mode = 2
 
+[node name="GameTitle" type="TextureRect" parent="MarginContainer/MenuLayout"]
+custom_minimum_size = Vector2(280, 120)
+layout_mode = 0
+offset_left = -125.0
+offset_top = -24.0
+offset_right = 411.0
+offset_bottom = 296.0
+texture = ExtResource("4_title")
+expand_mode = 2
+stretch_mode = 5
+
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer/MenuLayout"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -323.0
+offset_top = -340.0
 offset_right = 300.0
 grow_vertical = 0
 
@@ -295,6 +307,14 @@ text = "Quick Restart (R)"
 [node name="RestartDesc" type="Label" parent="MarginContainer/MenuLayout/TutorialOverlay/VBox/ControlsGrid"]
 layout_mode = 2
 text = "Reload current run instantly"
+
+[node name="FuelLabel" type="Label" parent="MarginContainer/MenuLayout/TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Buy Fuel (Spacebar)"
+
+[node name="FuelDesc" type="Label" parent="MarginContainer/MenuLayout/TutorialOverlay/VBox/ControlsGrid"]
+layout_mode = 2
+text = "Press Space to buy fuel."
 
 [node name="BackButton" type="Button" parent="MarginContainer/MenuLayout/TutorialOverlay/VBox"]
 layout_mode = 2
