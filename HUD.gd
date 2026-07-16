@@ -1,8 +1,15 @@
 extends CanvasLayer
 
 # --- Node References ---
-@onready var gas_meter = $Dashboard/VBox/GasMeter
-@onready var speed_label = $Dashboard/VBox/SpeedLabel
+@onready var gas_meter = $VBox/GasMeter
+@onready var speed_label = $VBox2/SpeedLabel
+@onready var speedometer = $VBox2/Speedometer
+
+# --- Speedometer Textures ---
+const SPEEDOMETER_1 = preload("res://assets/SPEDOMETER/Sprite-0001.png")
+const SPEEDOMETER_2 = preload("res://assets/SPEDOMETER/Sprite-0002.png")
+const SPEEDOMETER_3 = preload("res://assets/SPEDOMETER/Sprite-0003.png")
+const SPEEDOMETER_4 = preload("res://assets/SPEDOMETER/Sprite-0004.png")
 
 @onready var heat_meter = $WantedLevel/VBox/HeatMeter
 @onready var wanted_level_panel = $WantedLevel
@@ -27,8 +34,8 @@ extends CanvasLayer
 
 # --- Optional Gas Shop UI References ---
 @onready var gas_shop_panel = $GasShopPanel if has_node("GasShopPanel") else null
-@onready var gas_shop_label = $GasShopPanel/VBox/PriceLabel if has_node("GasShopPanel/VBox/PriceLabel") else null
-@onready var gas_cooldown_bar = $GasShopPanel/VBox/CooldownBar if has_node("GasShopPanel/VBox/CooldownBar") else null
+@onready var gas_shop_label = $GasShopPanel/PriceLabel if has_node("GasShopPanel/PriceLabel") else null
+@onready var gas_cooldown_bar = $GasShopPanel/CooldownBar if has_node("GasShopPanel/CooldownBar") else null
 
 @onready var speed_lines_overlay = $SpeedLinesOverlay if has_node("SpeedLinesOverlay") else null
 signal qte_ready 
@@ -151,7 +158,17 @@ func update_gas(current_gas: float, max_gas: float, is_nitro_active: bool):
 func update_speed(current_speed: float):
 	if not is_node_ready():
 		await ready
-	speed_label.text = "SPEED: " + str(round(current_speed)) + " m/s"
+	speed_label.text = str(round(current_speed)) + " m/s"
+	
+	if speedometer:
+		if current_speed < 1.0:
+			speedometer.texture = SPEEDOMETER_1
+		elif current_speed < 6.0:
+			speedometer.texture = SPEEDOMETER_2
+		elif current_speed < 12.0:
+			speedometer.texture = SPEEDOMETER_3
+		else:
+			speedometer.texture = SPEEDOMETER_4
 
 func update_heat(current_heat: float, max_heat: float):
 	if not is_node_ready():
@@ -246,6 +263,7 @@ func update_gas_shop(price: int, cooldown_remaining: float, max_cooldown: float,
 		gas_cooldown_bar.max_value = max_cooldown
 		gas_cooldown_bar.value = cooldown_remaining
 		gas_cooldown_bar.visible = (cooldown_remaining > 0.0)
+		gas_cooldown_bar.modulate = Color(1.0, 0.5, 0.0) # Orange
 
 func show_game_over(busted: bool):
 	if not is_node_ready():

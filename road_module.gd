@@ -52,9 +52,9 @@ func generate_4lane_traffic(horizon_z: float) -> void:
 	# 2. POLICE HEAT FULL - SPAWN SWERVING COPS!
 	# ==========================================
 	if Global.is_police_heat_full and not police_scenes.is_empty():
-		var spawn_attempts = randi_range(1, max_cars_per_tile)
+		var cop_spawn_attempts = randi_range(1, max_cars_per_tile)
 		
-		for i in range(spawn_attempts):
+		for i in range(cop_spawn_attempts):
 			if randf() > spawn_chance_per_attempt:
 				continue
 				
