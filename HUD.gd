@@ -256,7 +256,8 @@ func show_game_over(busted: bool):
 		game_over_message.text = "CRASHED OUT! BUSTED!"
 	else:
 		game_over_message.text = "OUT OF GAS!"
-		
+	
+	_feedback_queue.clear()
 	if game_over_restart_btn:
 		game_over_restart_btn.grab_focus()
 
