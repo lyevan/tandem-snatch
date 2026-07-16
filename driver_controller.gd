@@ -42,7 +42,7 @@ var _qte_accepting_input: bool = false
 @export_group("Gas Station Economy")
 @export var gas_refill_price: int = 500        # Costs 300 cash per refill
 @export var gas_refill_amount: float = 40.0    # Restores 40% gas
-@export var gas_purchase_cooldown: float = 5.0 # Wait 5 seconds between refills
+@export var gas_purchase_cooldown: float = 3.0 # Wait 5 seconds between refills
 var _gas_cooldown_timer: float = 0.0
 
 var current_fuel: float = 100.0
@@ -292,7 +292,7 @@ func take_crash_penalty() -> void:
 		hud.update_gas(current_fuel, max_fuel, is_nitro_active)
 		hud.show_feedback("💥 CRASHED! -20 FUEL 💥", Color.CORAL, 1.5)
 		
-	add_heat(5.0)
+	add_heat(10.0)
 	Audio.play_sfx(preload("res://assets/sfx/crash.mp3"), 15)
 	apply_screen_shake(0.5) 
 	
@@ -367,7 +367,7 @@ func evaluate_snatch_attempt() -> void:
 	# --- TIER 1: PERFECT SNATCH ---
 	if qte_timer <= perfect_threshold:
 		cash += 500
-		add_heat(7.5)
+		add_heat(15)
 		if hud:
 			hud.update_loot(cash, 500)
 			hud.show_qte_feedback("⚡ PERFECT SNATCH! +₱500 ⚡", Color.GOLD, 1.5)
@@ -377,7 +377,7 @@ func evaluate_snatch_attempt() -> void:
 	# --- TIER 2: GOOD SNATCH ---
 	elif qte_timer <= good_threshold:
 		cash += 250
-		add_heat(5.0)
+		add_heat(10)
 		if hud:
 			hud.update_loot(cash, 250)
 			hud.show_qte_feedback("💰 GOOD SNATCH! +₱250 💰", Color.SPRING_GREEN, 1.5)
@@ -387,7 +387,7 @@ func evaluate_snatch_attempt() -> void:
 	# --- TIER 3: SLOPPY / LATE SNATCH ---
 	else:
 		cash += 100
-		add_heat(2.5)
+		add_heat(5)
 		if hud:
 			hud.update_loot(cash, 100)
 			hud.show_qte_feedback("⚠️ SLOPPY GRAB! +₱100 ⚠️", Color.YELLOW, 1.5)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=100 format=4 uid="uid://dlx2um80cpw1h"]
+[gd_scene load_steps=101 format=4 uid="uid://dlx2um80cpw1h"]
 
 [ext_resource type="Script" uid="uid://dp7r263uie2n7" path="res://world_spawner.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://03sxxu8dfj2w" path="res://road_module.tscn" id="2_1bvp3"]
@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://cno0040hl66sa" path="res://vivians_bike/textures/Brakes_diffuse.png" id="8_w48qg"]
 [ext_resource type="Texture2D" uid="uid://bti4wxpll0c7r" path="res://assets/HAND-ANIMATION-(LEFT-RIGHT)/left_hand.png" id="11_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://c64eebbuda462" path="res://assets/HAND-ANIMATION-(LEFT-RIGHT)/right_hand.png" id="12_w48qg"]
-[ext_resource type="Shader" path="res://nitro.gdshader" id="13_w48qg"]
+[ext_resource type="Shader" uid="uid://bu3hyugmqhto4" path="res://nitro.gdshader" id="13_w48qg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7mycd"]
 size = Vector3(0.6, 0.3, 1)
@@ -544,7 +544,7 @@ _surfaces = [{
 blend_shape_mode = 0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_onyhn"]
-resource_name = "Cube_001"
+resource_name = "Cube_002"
 _surfaces = [{
 "aabb": AABB(-0.0120413, -0.00106224, -0.000269057, 0.0159682, 0.00197393, 0.00904575),
 "attribute_data": PackedByteArray("FofaPlbXVD8Wh9o+mYhdPz74wz6ZiF0/PvjDPlbXVD8Wh9o+VtdUPxaH2j6ZiF0/PvjDPpmIXT8++MM+VtdUPxaH2j5W11Q/FofaPpmIXT8++MM+mYhdPz74wz5W11Q/FofaPlbXVD8Wh9o+mYhdPz74wz6ZiF0/PvjDPlbXVD/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP5RlXT/+A9Y+lGVdP4Rm5z4oHlI/hGbnPigeUj/+A9Y+HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8oHlI//gPWPpRlXT/+A9Y+lGVdP4Rm5z4oHlI/hGbnPpRlXT/+A9Y+lGVdP4Rm5z4oHlI/hGbnPigeUj/+A9Y+KB5SP/4D1j6UZV0//gPWPpRlXT+EZuc+KB5SP4Rm5z4dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET/0MuE+RGsLPx289D5Eaws/iffqPvM+CT/0MuE+5sMPP4n36j428BE/Hbz0PubDDz/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT/0MuE+RGsLPx289D5Eaws/iffqPvM+CT/0MuE+5sMPP4n36j428BE/Hbz0PubDDz/0MuE+5sMPP4n36j7zPgk/9DLhPkRrCz+J9+o+NvARPx289D5Eaws/Hbz0PubDDz/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/Qy4T5Eaws/Hbz0PkRrCz+J9+o+8z4JP/Qy4T7mww8/iffqPjbwET8dvPQ+5sMPP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT/+5lc/NDDuPv7mVz/ITNQ+zfZRP1gX2D4v110/WBfYPs32UT+kZeo+H4FPP34+4T4v110/pGXqPt1MYD9+PuE+HbDfPvM+CT/1PvY+8z4JP/U+9j428BE/HbDfPjbwET/1PvY+8z4JP/U+9j428BE/HbDfPjbwET8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT8dsN8+8z4JP/U+9j7zPgk/9T72PjbwET8dsN8+NvARP/U+9j7zPgk/9T72PjbwET8dsN8+NvARPx2w3z7zPgk/9T72PvM+CT/1PvY+NvARPx2w3z428BE/HbDfPvM+CT8Wh9o+mYhdPxaH2j5W11Q/PvjDPlbXVD8++MM+mYhdPxaH2j5W11Q/PvjDPlbXVD8++MM+mYhdPxaH2j6ZiF0/FofaPlbXVD8++MM+VtdUPz74wz6ZiF0/FofaPpmIXT8Wh9o+mYhdPxaH2j5W11Q/PvjDPlbXVD8++MM+mYhdP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/lGVdP/4D1j4oHlI//gPWPigeUj+EZuc+lGVdP4Rm5z71PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP5RlXT+EZuc+lGVdP/4D1j4oHlI//gPWPigeUj+EZuc+lGVdP/4D1j4oHlI//gPWPigeUj+EZuc+lGVdP4Rm5z6UZV0/hGbnPpRlXT/+A9Y+KB5SP/4D1j4oHlI/hGbnPvU+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARPx289D7mww8/iffqPvM+CT8dvPQ+RGsLP4n36j428BE/9DLhPubDDz/0MuE+RGsLP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARPx289D7mww8/iffqPvM+CT8dvPQ+RGsLP4n36j428BE/9DLhPkRrCz/0MuE+5sMPPx289D7mww8/iffqPvM+CT8dvPQ+RGsLP4n36j428BE/9DLhPubDDz/0MuE+RGsLP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z428BE/9DLhPubDDz+J9+o+8z4JPx289D5Eaws/9DLhPkRrCz+J9+o+NvARPx289D7mww8/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARPy/XXT+kZeo+/uZXP8hM1D4v110/WBfYPt1MYD9+PuE+/uZXPzQw7j7N9lE/pGXqPs32UT9YF9g+H4FPP34+4T71PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j7zPgk/HbDfPvM+CT8dsN8+NvARP/U+9j428BE/9T72PvM+CT8dsN8+8z4JPx2w3z428BE/9T72PjbwET/1PvY+8z4JPx2w3z7zPgk/HbDfPjbwET/1PvY+NvARPw=="),
@@ -960,17 +960,17 @@ void sky() {
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_272bh"]
 width = 1024
 height = 1024
-noise = SubResource("FastNoiseLite_7mycd")
-color_ramp = SubResource("Gradient_lquwl")
 seamless = true
+color_ramp = SubResource("Gradient_lquwl")
+noise = SubResource("FastNoiseLite_7mycd")
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_5vw27"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kek77"]
 width = 1024
 height = 1024
-noise = SubResource("FastNoiseLite_5vw27")
 seamless = true
+noise = SubResource("FastNoiseLite_5vw27")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
 shader = SubResource("Shader_lquwl")
@@ -1132,6 +1132,10 @@ outline_size = 6
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 0.5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_w48qg"]
+font = ExtResource("7_272bh")
+font_size = 48
 
 [node name="Node3D" type="Node3D"]
 
@@ -1331,13 +1335,10 @@ transform = Transform3D(1, 0, 0, 0, 0.573476, 0.819222, 0, -0.819222, 0.573476, 
 
 [node name="HUD" parent="." instance=ExtResource("6_7mycd")]
 
-[node name="VBox" parent="HUD/WantedLevel" index="0"]
-alignment = 1
-
 [node name="MainMenuButton" parent="HUD/GameOverPanel/VBox" index="4"]
 mouse_default_cursor_shape = 2
 
-[node name="FeedbackLabel" parent="HUD" index="5"]
+[node name="FeedbackLabel" parent="HUD" index="2"]
 offset_left = -322.0
 
 [node name="LeftHandSnatch" type="AnimatedSprite2D" parent="HUD"]
@@ -1376,6 +1377,13 @@ grow_horizontal = 2
 label_settings = SubResource("LabelSettings_feedback")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="SnatchStatusLabel" type="Label" parent="HUD"]
+offset_left = 446.0
+offset_top = 659.0
+offset_right = 486.0
+offset_bottom = 682.0
+label_settings = SubResource("LabelSettings_w48qg")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
