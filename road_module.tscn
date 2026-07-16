@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://03sxxu8dfj2w"]
+[gd_scene load_steps=18 format=3 uid="uid://03sxxu8dfj2w"]
 
 [ext_resource type="Script" uid="uid://k85u7uj137t8" path="res://road_module.gd" id="1_dnxgn"]
 [ext_resource type="PackedScene" uid="uid://cr47t7ne50x40" path="res://buildings/building1.fbx" id="2_jgtwr"]
@@ -7,15 +7,20 @@
 [ext_resource type="PackedScene" uid="uid://br2qwdf3xhg1r" path="res://buildings/building4.fbx" id="5_gi5fo"]
 [ext_resource type="PackedScene" uid="uid://drtcwq77s488f" path="res://buildings/building5.fbx" id="6_2a4jm"]
 [ext_resource type="PackedScene" uid="uid://bkl3rqt7dl1kl" path="res://buildings/building6.fbx" id="7_l442v"]
+[ext_resource type="PackedScene" uid="uid://db7eykl2itf7a" path="res://buildings/building7.fbx" id="8_dmwm3"]
+[ext_resource type="PackedScene" uid="uid://uwe22sm4nvq1" path="res://buildings/building8.fbx" id="9_kqatg"]
+[ext_resource type="PackedScene" uid="uid://d28gku1o53nr" path="res://buildings/building9.fbx" id="10_a8d5w"]
 [ext_resource type="PackedScene" uid="uid://dvl1h18pyeaem" path="res://obstacle_pickup.tscn" id="10_abvkv"]
+[ext_resource type="PackedScene" uid="uid://dml3uiw7w866l" path="res://buildings/building10.fbx" id="11_64xdj"]
 [ext_resource type="PackedScene" uid="uid://tkqa62n6wpci" path="res://obstacle_police.tscn" id="11_abvkv"]
 [ext_resource type="PackedScene" uid="uid://72b1fn0muf44" path="res://obstacle_sedan.tscn" id="11_ma3no"]
 [ext_resource type="PackedScene" uid="uid://csjv1j13c1w32" path="res://KayKit_City_Builder_Bits_1.0_FREE/Assets/fbx/ROAD.fbx" id="12_abvkv"]
+[ext_resource type="PackedScene" uid="uid://rvw7mriilmin" path="res://buildings/building11.fbx" id="12_lpjj6"]
 [ext_resource type="PackedScene" uid="uid://bmggbfs06asxh" path="res://pedestrian.tscn" id="12_ma3no"]
 
 [node name="RoadModule" type="Node3D"]
 script = ExtResource("1_dnxgn")
-building_scenes = Array[PackedScene]([ExtResource("2_jgtwr"), ExtResource("3_abvkv"), ExtResource("4_ma3no"), ExtResource("5_gi5fo"), ExtResource("6_2a4jm"), ExtResource("7_l442v")])
+building_scenes = Array[PackedScene]([ExtResource("2_jgtwr"), ExtResource("3_abvkv"), ExtResource("4_ma3no"), ExtResource("5_gi5fo"), ExtResource("6_2a4jm"), ExtResource("7_l442v"), ExtResource("8_dmwm3"), ExtResource("9_kqatg"), ExtResource("10_a8d5w"), ExtResource("11_64xdj"), ExtResource("12_lpjj6")])
 obstacle_scenes = Array[PackedScene]([ExtResource("10_abvkv"), ExtResource("11_ma3no")])
 pedestrian_scenes = Array[PackedScene]([ExtResource("12_ma3no")])
 police_scenes = Array[PackedScene]([ExtResource("11_abvkv")])
